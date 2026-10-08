@@ -2,12 +2,41 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Mod Menu — Actor</title>
+<title>Alt:V Internal Menu</title>
+<style>
+body { background: transparent; color: white; font-family: monospace; }
+.menu { background: rgba(0,0,0,0.8); padding: 20px; width: 300px; border-radius: 8px; }
+.row { display: flex; justify-content: space-between; margin: 10px 0; }
+input { background: #333; color: white; border: none; padding: 5px; }
+</style>
 </head>
 <body>
-<div class="menu" id="menu">
-    <!-- GUI Code Here -->
-    <p>Alt:V Internal Mod Menu</p>
+<div class="menu">
+    <h3>Combat</h3>
+    <div class="row">
+        <label>Silent Aim</label>
+        <input type="checkbox" id="silentAim" checked>
+    </div>
+    <div class="row">
+        <label>FOV</label>
+        <input type="range" id="fov" min="10" max="180" value="90">
+    </div>
+    <div class="row">
+        <label>Inner Color</label>
+        <input type="color" id="colorInner" value="#ffffff">
+    </div>
 </div>
+
+<script>
+function sendToCpp(key, value) {
+    if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.postMessage(JSON.stringify({type: 'setting', key: key, value: value}));
+    }
+}
+
+document.getElementById('silentAim').addEventListener('change', (e) => sendToCpp('silentAim', e.target.checked));
+document.getElementById('fov').addEventListener('input', (e) => sendToCpp('fov', e.target.value));
+document.getElementById('colorInner').addEventListener('input', (e) => sendToCpp('colorInner', e.target.value));
+</script>
 </body>
 </html>
